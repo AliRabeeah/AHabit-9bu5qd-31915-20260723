@@ -30,7 +30,10 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install
+        run: |
+          pnpm config set strict-peer-dependencies false
+          pnpm config set auto-install-peers false
+          pnpm install --no-frozen-lockfile
 
       - name: Install EAS CLI
         run: npm install -g eas-cli
