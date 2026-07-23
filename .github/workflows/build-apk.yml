@@ -29,11 +29,18 @@ jobs:
           node-version: 20
           cache: pnpm
 
-      - name: Install dependencies
+      - name: Install dependencies and regenerate lockfile
         run: |
           pnpm config set strict-peer-dependencies false
-          pnpm config set auto-install-peers false
+          pnpm config set auto-install-peers true
           pnpm install --no-frozen-lockfile
+
+      - name: Commit updated lockfile
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add pnpm-lock.yaml
+          git diff --staged --quiet || git commit -m "ci: regenerate pnpm-lock.yaml"
 
       - name: Install EAS CLI
         run: npm install -g eas-cli
